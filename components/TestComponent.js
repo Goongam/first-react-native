@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import Register from './Register';
+import Login from './Login';
 
 async function getData(){
     const res = await fetch("http://182.225.65.132:20212/members")
@@ -26,6 +27,7 @@ export default function TestComponent(){
         {/* {data.map(a => 
             <Text key={a.idx}>{a.id} / {a.name} / {a.password}</Text>
         )} */}
-        <Register />
+        {/* <Register /> */}
+        <Login />
     </View>);
 }
