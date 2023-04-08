@@ -1,8 +1,9 @@
 import { useEffect, useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
+import Register from './Register';
 
 async function getData(){
-    const res = await fetch("https://api.manana.kr/exchange/rate/KRW/JPY,USD,KRW.json")
+    const res = await fetch("http://182.225.65.132:20212/members")
     const json = await res.json();
     return json;
 }
@@ -18,12 +19,13 @@ export default function TestComponent(){
         });
         
     },[]);
-    console.log(data);
+    // console.log(data);
     
     return (
     <View>
-        {data.map(a => 
-            <Text>{a.date} / {a.name} / {a.rate}</Text>
-        )}
+        {/* {data.map(a => 
+            <Text key={a.idx}>{a.id} / {a.name} / {a.password}</Text>
+        )} */}
+        <Register />
     </View>);
 }

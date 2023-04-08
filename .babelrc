@@ -1,0 +1,14 @@
+{
+  "plugins": [
+    [
+      "module-resolver",
+      {
+        "root": ["./"],
+        "alias": {
+          "@env": "./env"
+        }
+      }
+    ],
+    "react-native-config"
+  ]
+}
