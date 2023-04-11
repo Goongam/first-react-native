@@ -27,7 +27,7 @@ export default function TestComponent(){
         {/* {data.map(a => 
             <Text key={a.idx}>{a.id} / {a.name} / {a.password}</Text>
         )} */}
-        <Register />
-        {/* <Login /> */}
+        {/* <Register /> */}
+        <Login />
     </View>);
 }

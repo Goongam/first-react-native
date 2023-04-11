@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Button, TextInput, StyleSheet } from "react-native";
+import { Button, TextInput, StyleSheet, Text } from "react-native";
 import Config from 'react-native-config';
 
 async function pressLoginbtn(id, password){
@@ -34,8 +34,10 @@ export default function Login(){
 
     return (
     <>
-        <TextInput placeholder="id" style={styles.input} onChangeText={setId} value={id}/>
-        <TextInput placeholder="password" style={styles.input} onChangeText={setPassword} value={password}/>
+        <Text>ID</Text>
+        <TextInput placeholder="" style={styles.input} onChangeText={setId} value={id}/>
+        <Text>PASSWORD</Text>
+        <TextInput placeholder="" style={styles.input} onChangeText={setPassword} value={password}/>
         <Button title="확인" onPress={()=>pressLoginbtn(id,password)}></Button>
     </>);
 }
@@ -48,6 +50,7 @@ const styles = StyleSheet.create({
         paddingHorizontal: 10, // 가로 여백
         paddingVertical: 5, // 세로 여백
         width: 300,
+        marginBottom: 20,
     }
 });
   
