@@ -1,6 +1,7 @@
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, View  } from 'react-native';
 import TestComponent from './components/TestComponent';
+import { Toast } from 'react-native-toast-message/lib/src/Toast';
 
 export default function App() {
   return (
@@ -8,6 +9,7 @@ export default function App() {
       {/* <Text>환율 API</Text> */}
       <TestComponent />
       <StatusBar style="dark" />
+      <Toast />
     </View>
   );
 }

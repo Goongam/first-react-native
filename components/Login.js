@@ -41,13 +41,13 @@ export default function Login(){
 }
 
 const styles = StyleSheet.create({
-    container: {
-      flex: 1,
-      backgroundColor: '#fff',
-      alignItems: 'center',
-      justifyContent: 'center',
-      backgroundColor: '#ffffff',
-      color:'#ffffff'
-    },
-  });
+    input:{
+        borderWidth: 1, // 경계선 두께
+        borderColor: '#ccc', // 경계선 색상
+        borderRadius: 5, // 경계선 라운드 처리
+        paddingHorizontal: 10, // 가로 여백
+        paddingVertical: 5, // 세로 여백
+        width: 300,
+    }
+});
   
