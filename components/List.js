@@ -1,78 +1,58 @@
-import { useQuery } from "react-query";
+import { useQuery,useInfiniteQuery } from "react-query";
 import { FlatList, StyleSheet, View, SafeAreaView,StatusBar  } from "react-native";
 import { Text } from "react-native";
+import { useState } from "react";
 function fetchData(pageNumber) {
     return fetch(`https://swapi.dev/api/people/?page=${pageNumber}`).then((res) => res.json());
   }
 
-const DATA = [
-    {
-        id: 'bd7acbea-c1b1-46c2-aed5-3ad53abb28ba',
-        title: 'First Item',
-    },
-    {
-        id: '3ac68afc-c605-48d3-a4f8-fbd91aa97f63',
-        title: 'Second Item',
-    },
-    {
-        id: '58694a0f-3da1-471f-bd96-145571e29d72',
-        title: 'Third Item',
-    },
-    {
-        id: 'bd7acbea-c1b1-46c2-aed5-3ad53abb28ba',
-        title: 'First Item',
-    },
-    {
-        id: '3ac68afc-c605-48d3-a4f8-fbd91aa97f63',
-        title: 'Second Item',
-    },
-    {
-        id: '58694a0f-3da1-471f-bd96-145571e29d72',
-        title: 'Third Item',
-    },
-    {
-        id: 'bd7acbea-c1b1-46c2-aed5-3ad53abb28ba',
-        title: 'First Item',
-    },
-    {
-        id: '3ac68afc-c605-48d3-a4f8-fbd91aa97f63',
-        title: 'Second Item',
-    },
-    {
-        id: '58694a0f-3da1-471f-bd96-145571e29d72',
-        title: 'Third Item',
-    },
-    {
-        id: 'bd7acbea-c1b1-46c2-aed5-3ad53abb28ba',
-        title: 'First Item',
-    },
-    {
-        id: '3ac68afc-c605-48d3-a4f8-fbd91aa97f63',
-        title: 'Second Item',
-    },
-    {
-        id: '58694a0f-3da1-471f-bd96-145571e29d72',
-        title: 'Third Item',
-    },
-];
+
 const Item = ({title}) => (
     <View style={styles.item}>
       <Text style={styles.title}>{title}</Text>
     </View>
   );
 
+let page = 1;
+const initialUrl = 'https://swapi.dev/api/people/?page='
+
+const fetchUrl = async (url) => {
+    // console.log(url);
+    const response = await fetch(url);
+    return response.json();
+  };
+const LIMIT = 10;
 export default function List(){
-    let page = 1;
-  const { data, isLoading, isFetching, fetchMore } = useQuery('data', () => fetchData(page));
+    const { 
+        data,//데이터
+        fetchNextPage, //pageParam에 저장된 다음url을 불러옴
+        hasNextPage, //pageParam에 url이 저장되 있는지 확인
+        isLoading, 
+        isError, 
+        error, 
+        isFetching } = useInfiniteQuery(
+            ["sw-people"], //쿼리키
+            ({pageParam = initialUrl+'1'})=> fetchUrl(pageParam), //실제 데이터 불러옴
+            {
+                getNextPageParam: (lastPage, allPages) => {
+                    const nextPage =
+                        allPages.length < LIMIT ? initialUrl+(allPages.length + 1) : undefined;
+                    return nextPage;
+                }//pageParam 관리함수
+            }
+    );
 
   if (isLoading) {
     return <Text>Loading...</Text>;
   }
-  console.log(fetchMore);
-  
-//   console.log('data:',data.results);
-  const results = data.results;
-//   console.log(results);
+
+let results = [];
+data.pages.forEach((pageData)=>{
+    pageData.results?.forEach(data =>{
+        results.push(data);
+    })
+})
+
   
   return (
     <SafeAreaView>
@@ -80,6 +60,8 @@ export default function List(){
       data={results}
       renderItem={({ item }) => {
         console.log(item.name);
+        // console.log(page);
+        
         return (
             <Item title={item.name} />
         )
@@ -87,7 +69,7 @@ export default function List(){
       keyExtractor={(item) => item.name}
       onEndReached={() => {
         // console.log('----end----');
-        fetchMore(++page);
+        fetchNextPage();
       }}
       onEndReachedThreshold={0.1}
     />
