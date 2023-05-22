@@ -1,8 +1,10 @@
 import { useState } from "react";
 import { Button, TextInput, StyleSheet, Text } from "react-native";
 import Config from 'react-native-config';
+import { useQuery, useQueryClient } from "react-query";
+import { getData, removeData, storeData } from "../service/storage";
 
-async function pressLoginbtn(id, password){
+async function pressLoginbtn_before(id, password){
     console.log(`${Config.APIURL}/member/${id}`);
     
     const data = await fetch(`${Config.APIURL}/member/${id}`)
@@ -27,10 +29,43 @@ async function pressLoginbtn(id, password){
 
 }
 
-export default function Login(){
+const loginUser = () =>
+  fetch('http://ibdabackend.iptime.org:5001/login', {
+    method: "POST",
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      id: 'test1',
+      password: 'password1'
+    })
+  }).then(response => response.json());
 
+
+
+
+export default function Login(){
+    // const { data, isLoading, isError, refetch } = useQuery(['user'], loginUser);
+    const queryClient = useQueryClient();
     const [id, setId] = useState('');
-    const [password, setPassword] = useState(' ');
+    const [password, setPassword] = useState('');
+
+    
+    const pressLoginbtn = async (id, password) => {    
+        const userdata =await loginUser();
+        // queryClient.setQueryData(['user'], userdata);
+        storeData('user',userdata);
+    }
+
+    const test = async ()=>{
+        // console.log(queryClient.getQueryData('user'));
+        console.log(await getData('user'));
+    }
+
+    const logout = async ()=>{
+        removeData('user');
+    }
+    
 
     return (
     <>
@@ -39,6 +74,8 @@ export default function Login(){
         <Text>PASSWORD</Text>
         <TextInput placeholder="" style={styles.input} onChangeText={setPassword} value={password}/>
         <Button title="확인" onPress={()=>pressLoginbtn(id,password)}></Button>
+        <Button title="로그아웃" onPress={()=>logout()}></Button>
+        <Button title="쿼리테스트" onPress={()=>test()}></Button>
     </>);
 }
 
