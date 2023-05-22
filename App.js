@@ -6,14 +6,19 @@ import List from './components/List'
 import { QueryClientProvider, QueryClient } from 'react-query';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { getData, storeData } from './service/storage';
+import Login from './components/Login';
+import QRCodeScanner from './components/QRCodeScanner';
 
 
+const queryClient = new QueryClient();
 export default function App() {
-  const queryClient = new QueryClient();
 
-  storeData('test',{'a':1});
+  // storeData('test',{'a':1});
  
-  getData('test').then(data=>console.log(data));
+  // getData('test').then(data=>console.log(data));
+
+
+
 
   return (
     <QueryClientProvider client={queryClient}>
@@ -21,6 +26,8 @@ export default function App() {
       {/* <Text>환율 API</Text> */}
       {/* <TestComponent /> */}
       {/* <List /> */}
+      {/* <Login /> */}
+      <QRCodeScanner />
       <StatusBar style="dark" />
       <Toast />
     </View>
