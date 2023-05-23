@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Button, TextInput, StyleSheet, Text } from "react-native";
+import { Button, TextInput, StyleSheet, Text, Modal, Image,View, TouchableOpacity } from "react-native";
 import Config from 'react-native-config';
 import { useQuery, useQueryClient } from "react-query";
 import { getData, removeData, storeData } from "../service/storage";
@@ -44,39 +44,58 @@ const loginUser = () =>
 
 
 
-export default function Login(){
+export default function Login({navigation }){
     // const { data, isLoading, isError, refetch } = useQuery(['user'], loginUser);
     const queryClient = useQueryClient();
     const [id, setId] = useState('');
     const [password, setPassword] = useState('');
+    const [modalVisible, setModalVisible] = useState(true);
 
+    //QR 토큰 state
+    const [token, setToken] = useState(undefined);
     
-    const pressLoginbtn = async (id, password) => {    
+    const pressLoginbtn = async (id, password, navigation ) => {    
         const userdata =await loginUser();
         // queryClient.setQueryData(['user'], userdata);
+        //TODO: 로그인 실패 로직 추가
         storeData('user',userdata);
-    }
-
-    const test = async ()=>{
-        // console.log(queryClient.getQueryData('user'));
-        console.log(await getData('user'));
+        navigation.navigate('Main');
     }
 
     const logout = async ()=>{
         removeData('user');
+        setToken(undefined);
     }
     
+    const qrLogin = async ()=>{
+        setModalVisible(true);
+        const userData = await getData('user');
+        setToken(userData.token);
+    }
 
     return (
-    <>
-        <Text>ID</Text>
-        <TextInput placeholder="" style={styles.input} onChangeText={setId} value={id}/>
-        <Text>PASSWORD</Text>
-        <TextInput placeholder="" style={styles.input} onChangeText={setPassword} value={password}/>
-        <Button title="확인" onPress={()=>pressLoginbtn(id,password)}></Button>
-        <Button title="로그아웃" onPress={()=>logout()}></Button>
-        <Button title="쿼리테스트" onPress={()=>test()}></Button>
-    </>);
+        <View className="bg-slate-50 h-full flex justify-center items-center">
+            <View>
+                <Text>ID</Text>
+                <TextInput placeholder="" className="w-[300px] h-[40px] border-[1px] rounded-lg border-black" onChangeText={setId} value={id}/>
+            </View>
+            <View className="mt-5">
+                <Text>PASSWORD</Text>
+                <TextInput secureTextEntry={true} className="w-[300px] h-[40px] border-[1px] rounded-lg border-black" onChangeText={setPassword} value={password}/>
+            </View>
+            <TouchableOpacity className="w-[300px] bg-slate-50">
+                <Text className="h-4 ml-auto">회원가입</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity onPress={()=>pressLoginbtn(id,password, navigation )} className="w-[300px] h-10 mt-5 rounded-lg bg-blue-300 flex justify-center items-center">
+                <Text className="text-xl font-bold">로그인</Text>
+            </TouchableOpacity>
+
+        
+
+
+        </View>
+    );
 }
 
 const styles = StyleSheet.create({
@@ -87,7 +106,7 @@ const styles = StyleSheet.create({
         paddingHorizontal: 10, // 가로 여백
         paddingVertical: 5, // 세로 여백
         width: 300,
-        marginBottom: 20,
+        marginTop: 20,
     }
 });
   

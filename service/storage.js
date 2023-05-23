@@ -15,7 +15,7 @@ export const getData = async (key) => {
  
         const loadedData = await AsyncStorage.getItem(key);
 
-        const data = JSON.parse(loadedData) || "데이터가 없음";
+        const data = JSON.parse(loadedData) || undefined;
 
         return data;
     } catch(e) {
